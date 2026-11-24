@@ -10,11 +10,15 @@ const TEXT =
 
 mkdirSync("/output", { recursive: true });
 
-// Guard the gate: the entry is only valid at 1-200 characters. Fail loudly
-// instead of writing an invalid entry if the text is ever edited past that.
+// Guard the gate: the entry is only valid at 1-200 characters on a single
+// line. Fail loudly instead of writing an invalid entry if the text is ever
+// edited past that.
 const codePoints = [...TEXT].length;
 if (codePoints < 1 || codePoints > 200) {
   throw new Error(`entry text must be 1-200 characters, got ${codePoints}`);
+}
+if (TEXT.includes("\n") || TEXT.includes("\r")) {
+  throw new Error("entry text must be a single line");
 }
 
 writeFileSync("/output/entry.txt", TEXT, "utf8");
